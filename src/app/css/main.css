@@ -1,0 +1,70 @@
+.header {
+  background-image: url("https://media-public.fcbarcelona.com/20157/74594198/910692/1.2/910692.jpg");
+  background-position: bottom center;
+  background-size: cover;
+  -webkit-transition: background 0.3s, border 0.3s, border-radius 0.3s, -webkit-box-shadow 0.3s;
+  transition: background 0.3s, border 0.3s, border-radius 0.3s, -webkit-box-shadow 0.3s;
+  transition: background 0.3s, border 0.3s, border-radius 0.3s, box-shadow 0.3s;
+  transition: background 0.3s, border 0.3s, border-radius 0.3s, box-shadow 0.3s, -webkit-box-shadow 0.3s;
+  padding: 120px 0px 240px 0px;
+  border-bottom-left-radius: 20%;
+  border-bottom-right-radius: 20%; }
+
+.layer {
+  background-color: transparent;
+  background-image: linear-gradient(250deg, #00ede9 0%, #1956b7 94%);
+  opacity: 0.81;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  padding: 120px 0px 100px 0px;
+  border-bottom-left-radius: 20%;
+  border-bottom-right-radius: 20%;
+  color: white;
+  text-align: center;
+  font-family: "Roboto Slab", Sans-serif;
+  font-size: 65px;
+  font-weight: 400; }
+
+.divider {
+  text-align: center;
+  margin-left: 48%;
+  padding-bottom: 24px; }
+  .divider .separator {
+    text-align: center;
+    border-top-style: solid;
+    border-top-width: 3px;
+    border-top-color: #ffffff;
+    width: 5%; }
+
+.animated {
+  -webkit-animation-duration: 10s;
+  animation-duration: 10s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both; }
+
+.fadeInDown {
+  -webkit-animation-name: fadeInDown;
+  animation-name: fadeInDown; }
+
+@keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px); }
+  100% {
+    opacity: 1;
+    transform: translateY(0); } }
+
+.searchHead {
+  text-align: center;
+  font-family: 'Anton', sans-serif;
+  font-size: 50px; }
+
+.resultCards {
+  margin-left: 70px;
+  margin-bottom: 10px;
+  width: 12rem; }
+
+/*# sourceMappingURL=main.css.map */
