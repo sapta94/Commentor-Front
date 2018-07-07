@@ -58,6 +58,10 @@ class LoginForm extends React.Component{
         })
     }
     registerSubmit(){
+
+        this.setState({
+            registering:true
+        })
         var data=this.state.registerForm;
         var that=this
 
@@ -98,6 +102,10 @@ class LoginForm extends React.Component{
     }
 
     submitLogin(){
+
+        this.setState({
+            loging:true
+        })
         var data=this.state.loginForm;
         var that=this
 
@@ -119,13 +127,19 @@ class LoginForm extends React.Component{
                 password:data.password
             }),
           }).then(function(resp){
-              console.log(resp.response)
-              if(resp.status==200){
+              console.log(resp)
+              if(resp.data.response=='success'){
                   alert('Successfully Logged In')
+                  axios.get('http://commentor.test/api/current/user').then(function(response){
+                    console.log(response)
+                })
+              }
+              else{
+                alert('Wrong Password or no user!')
               }
               that.setState({
                   show:'login',
-                  registering:false
+                  loging:false,
               })
           }).catch(function(err){
               console.log(err)
@@ -138,6 +152,15 @@ class LoginForm extends React.Component{
         var regData=this.state.registerForm;
         var loginData=this.state.loginForm;
         var that=this
+
+        if(this.state.loging){
+            var loginText=<span>Logging in..<i className="fa fa-spinner fa-spin" style={{fontSize:"36px"}}></i> </span>
+            var loginDisabled=true
+        }
+        else{
+            var loginText=<span>Log In</span>
+            var loginDisabled=false
+        }
         if(this.state.show=='register'){
             var signActive='active'
             var regActive=''
@@ -203,7 +226,7 @@ class LoginForm extends React.Component{
                         <input placeholder="Password *" value={loginData.password} onChange={(e)=>that.onLoginChange(e)} type="password"required autocomplete="off" name="password"/>
                     </div>
                     
-                    <button onClick={()=>that.submitLogin()} className="button button-block">Log In</button>
+                    <button onClick={()=>that.submitLogin()} className="button button-block">{loginText}</button>
 
                 </div>
                 
