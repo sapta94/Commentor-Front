@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM,{render} from "react-dom";
 import '../css/main.css'
 import axios from 'axios'
+import qs from 'qs'
 
 
 class Comment extends React.Component{
@@ -11,11 +12,53 @@ class Comment extends React.Component{
         this.state={
             allComments:[],
             fetching:false,
-            content:''
+            content:'',
+            currentUserID:null,
+            posting:false
         }
         this.onChange = this.onChange.bind(this)
+        this.onSubmit = this.onSubmit.bind(this)
+        this.voteSubmit = this.voteSubmit.bind(this)
     }
 
+    componentWillMount(){
+        var userID=sessionStorage.getItem('userID')
+        console.log('user is '+userID)
+        if(userID==null||userID=='null'){
+            window.location.href="/register"
+        }
+    }
+
+    voteSubmit(type,commentID,posterID){
+        var userID=sessionStorage.getItem('userID')
+        console.log(posterID+' '+userID)
+        if(posterID==userID){
+            alert('You cannot vote your own comment!')
+            return
+        }
+        var that=this;
+        axios({
+            method: 'POST',
+            url: 'http://commentor.test/api/comment/update',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            data: qs.stringify( {
+                type:type,
+                commentID:commentID,
+                userID:userID
+            }),
+          }).then(function(resp){
+              that.setState({
+                  content:''
+              })
+              if(resp.status==200){
+                  that.getAllComments();
+              }
+          }).catch(function(err){
+            alert('some error occured')
+        })
+    }
     onChange(e){
         var val = e.target.value;
         this.setState({
@@ -23,16 +66,66 @@ class Comment extends React.Component{
         })
     }
 
-    // componentDidMount(){
+    onSubmit(){
+        var content = this.state.content;
+        var that=this;
 
-    // }
-    // getAllComments(){
-    //     axios.get('')
-    // }
+        this.setState({
+            posting:true
+        })
+
+        if(content==null||content==''){
+            alert('Enter a content')
+            return
+        }
+
+        axios({
+            method: 'POST',
+            url: 'http://commentor.test/api/comment',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            data: qs.stringify( {
+                userID:sessionStorage.getItem('userID'),
+                content:content
+            }),
+          }).then(function(resp){
+              that.setState({
+                  content:'',
+                  posting:false
+              })
+              if(resp.status==201){
+                  that.getAllComments();
+              }
+          }).catch(function(err){
+            alert('some error occured')
+        })
+    }
+
+    componentDidMount(){
+        this.getAllComments();
+    }
+    getAllComments(){
+        var that=this
+        axios.get('http://commentor.test/api/comment').then(function(response){
+            that.setState({
+                allComments:response.data.data
+            })
+        })
+    }
 
     render(){
         var commentData=this.state.allComments;
+        if(commentData==undefined){
+            commentData=[]
+        }
         var that=this;
+
+        if(this.state.posting){
+            var postBtn=<button style={{float:'right'}} disabled={true} onClick={()=>that.onSubmit()} type="button" class="btn btn-success">Posting..</button>
+        }else{
+            var postBtn=<button style={{float:'right'}} onClick={()=>that.onSubmit()} type="button" class="btn btn-success">Post</button>
+        }
         return(
             <div>
                 <div class="card">
@@ -43,9 +136,28 @@ class Comment extends React.Component{
                         <div class="form-group">
                             <textarea placeholder="Type a comment.." className="form-control" onChange={(e)=>that.onChange(e)} value={that.state.content} id="formControlTextarea1" rows="3" name="content"></textarea>
                         </div>
-                        <button style={{float:'right'}} type="button" class="btn btn-success">Post</button>
+                        {postBtn}
                     </div>
+                </div>
+                    <div class="card">
+                        <div class="card-body">
+                            {
+                                commentData.map(function(item,index){
+                                    return(
+                                        <span>
+                                            <h5 class="card-title">{item.firstname+' '+item.Lastname}</h5><span></span>
+                                            <p class="card-text">{item.content} <span style={{float:'right'}}><i onClick={()=>that.voteSubmit('upvote',item.commentID,item.userID)} class="fa fa-thumbs-o-up" style={{fontSize:"24px",color:"green",cursor:'pointer'}}></i>{' '+item.upvotes+' Upvotes'}<br/><i onClick={()=>that.voteSubmit('downvote',item.commentID,item.userID)} class="fa fa-thumbs-o-down" style={{fontSize:"24px",color:"red",cursor:'pointer'}}></i>{' '+item.downvotes+' Downvotes'}</span></p>
+                                            <br/>
+                                            <hr/>
+                                        </span>
+                                    )
+                                    
+                                })
+                            }
+                            
+                        </div>
                     </div>
+                
             </div>
         )
     }
