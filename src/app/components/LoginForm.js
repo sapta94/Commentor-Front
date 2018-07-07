@@ -31,6 +31,10 @@ class LoginForm extends React.Component{
         this.changeView = this.changeView.bind(this)
     }
 
+    componentWillMount(){
+        
+    }
+
     onChange(e){
         var id=e.target.name;
         var val=e.target.value;
@@ -130,9 +134,11 @@ class LoginForm extends React.Component{
               console.log(resp)
               if(resp.data.response=='success'){
                   alert('Successfully Logged In')
-                  axios.get('http://commentor.test/api/current/user').then(function(response){
-                    console.log(response)
-                })
+                  var obj = resp.data.data
+                  sessionStorage.setItem('userID', obj[0].id);
+                  sessionStorage.setItem('userName', obj[0].firstname);
+                  sessionStorage.setItem('userLastname', obj[0].lastname);
+                  window.location.href="/comments"
               }
               else{
                 alert('Wrong Password or no user!')
