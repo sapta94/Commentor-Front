@@ -20,6 +20,7 @@ class Comment extends React.Component{
         this.onChange = this.onChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
         this.voteSubmit = this.voteSubmit.bind(this)
+        this.getVoteDetails = this.getVoteDetails.bind(this)
     }
 
     componentWillMount(){
@@ -28,14 +29,17 @@ class Comment extends React.Component{
         if(userID==null||userID=='null'){
             window.location.href="/register"
         }
+        this.getVoteDetails();
+    }
 
+    getVoteDetails(){
+        var userID=sessionStorage.getItem('userID')
         axios.get('https://commentor-api.herokuapp.com/api/vote/'+userID).then((resp)=>{
             this.setState({
                 votes:resp.data.data
             })
         })
     }
-
     voteSubmit(type,commentID,posterID){
         var userID=sessionStorage.getItem('userID')
         var voteData = this.state.votes||[];
@@ -72,6 +76,7 @@ class Comment extends React.Component{
               })
               if(resp.status==200){
                   that.getAllComments();
+                  this.getVoteDetails();
               }
           }).catch(function(err){
             alert('some error occured')
