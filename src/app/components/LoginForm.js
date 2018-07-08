@@ -166,6 +166,16 @@ class LoginForm extends React.Component{
             var loginText=<span>Log In</span>
             var loginDisabled=false
         }
+
+        if(this.state.registering){
+            var signText=<span>Registering..<i className="fa fa-spinner fa-spin" style={{fontSize:"36px"}}></i> </span>
+            var signDisabled=true
+        }
+        else{
+            var signText=<span>Register</span>
+            var signDisabled=false
+        }
+
         if(this.state.show=='register'){
             var signActive='active'
             var regActive=''
@@ -215,7 +225,7 @@ class LoginForm extends React.Component{
                     <input placeholder="Confirm Password *" onChange={(e)=>{that.onChange(e)}} value={regData.confirmPass} name="confirmPass" type="password"required autocomplete="off"/>
                 </div>
                 
-                <button onClick={()=>that.registerSubmit()} className="button button-block">Sign Up</button>
+                <button onClick={()=>that.registerSubmit()} disabled={signDisabled} className="button button-block">{signText}</button>
                 
                 
 
@@ -231,7 +241,7 @@ class LoginForm extends React.Component{
                         <input placeholder="Password *" value={loginData.password} onChange={(e)=>that.onLoginChange(e)} type="password"required autocomplete="off" name="password"/>
                     </div>
                     
-                    <button onClick={()=>that.submitLogin()} className="button button-block">{loginText}</button>
+                    <button onClick={()=>that.submitLogin()} disabled={loginDisabled}  className="button button-block">{loginText}</button>
 
                 </div>
                 

@@ -38,7 +38,7 @@ class Comment extends React.Component{
 
     voteSubmit(type,commentID,posterID){
         var userID=sessionStorage.getItem('userID')
-        var voteData = this.state.votes;
+        var voteData = this.state.votes||[];
         console.log(posterID+' '+userID)
         if(posterID==userID){
             alert('You cannot vote your own comment!')
