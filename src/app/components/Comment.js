@@ -14,7 +14,8 @@ class Comment extends React.Component{
             fetching:false,
             content:'',
             currentUserID:null,
-            posting:false
+            posting:false,
+            votes:[]
         }
         this.onChange = this.onChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
@@ -27,19 +28,36 @@ class Comment extends React.Component{
         if(userID==null||userID=='null'){
             window.location.href="/register"
         }
+
+        axios.get('https://commentor-api.herokuapp.com/api/vote/'+userID).then((resp)=>{
+            this.setState({
+                votes:resp.data.data
+            })
+        })
     }
 
     voteSubmit(type,commentID,posterID){
         var userID=sessionStorage.getItem('userID')
+        var voteData = this.state.votes;
         console.log(posterID+' '+userID)
         if(posterID==userID){
             alert('You cannot vote your own comment!')
             return
         }
         var that=this;
+        var flag=0;
+        voteData.forEach(function(item,index){
+            if(item.commentID==commentID && item.userID==userID && item.type==type){
+                flag=1;
+            }
+        })
+        if(flag==1){
+            alert('You have already '+type+'ed this comment!')
+            return
+        }
         axios({
             method: 'POST',
-            url: 'http://commentor.test/api/comment/update',
+            url: 'https://commentor-api.herokuapp.com/api/comment/update',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
@@ -81,7 +99,7 @@ class Comment extends React.Component{
 
         axios({
             method: 'POST',
-            url: 'http://commentor.test/api/comment',
+            url: 'https://commentor-api.herokuapp.com/api/comment',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
@@ -107,7 +125,7 @@ class Comment extends React.Component{
     }
     getAllComments(){
         var that=this
-        axios.get('http://commentor.test/api/comment').then(function(response){
+        axios.get('https://commentor-api.herokuapp.com/api/comment').then(function(response){
             that.setState({
                 allComments:response.data.data
             })

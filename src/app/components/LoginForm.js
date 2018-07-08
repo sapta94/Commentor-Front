@@ -38,7 +38,6 @@ class LoginForm extends React.Component{
     onChange(e){
         var id=e.target.name;
         var val=e.target.value;
-        console.log(id+'-'+val)
         var formData = this.state.registerForm;
         formData[id]=val;
         this.setState({
@@ -80,7 +79,7 @@ class LoginForm extends React.Component{
 
         axios({
             method: 'POST',
-            url: 'http://commentor.test/api/users/register',
+            url: 'https://commentor-api.herokuapp.com/api/users/register',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
@@ -122,7 +121,7 @@ class LoginForm extends React.Component{
 
         axios({
             method: 'POST',
-            url: 'http://commentor.test/api/users/login',
+            url: 'https://commentor-api.herokuapp.com/api/users/login',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },

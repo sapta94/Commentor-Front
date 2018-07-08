@@ -23,7 +23,7 @@ class Header extends React.Component{
     }
 
     callAPI(){
-        axios.get('http://commentor.test/api/comment').then(function(response){
+        axios.get('https://commentor-api.herokuapp.com/api/comment').then(function(response){
             console.log(response)
         })
     }
